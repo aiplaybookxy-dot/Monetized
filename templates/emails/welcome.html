@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to EscrowMarket</title>
+    <style>
+        body {
+            font-family: 'Ubuntu', Arial, sans-serif;
+            background: #F8FAFC;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            max-width: 560px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #1a56f0;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #fff;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 6px 0 0;
+            font-size: 14px;
+        }
+
+        .body {
+            padding: 36px 40px;
+        }
+
+        .body p {
+            color: #374151;
+            line-height: 1.7;
+            font-size: 15px;
+            margin: 0 0 16px;
+        }
+
+        .cta {
+            display: block;
+            margin: 28px auto 0;
+            padding: 14px 32px;
+            background: #1a56f0;
+            color: #fff;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            text-align: center;
+            width: fit-content;
+        }
+
+        .footer {
+            padding: 20px 40px;
+            border-top: 1px solid #F1F5F9;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #9CA3AF;
+            font-size: 12px;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <h1>EscrowMarket</h1>
+            <p>Secure Social Media Account Trading</p>
+        </div>
+        <div class="body">
+            <p>Hi <strong>{{ user.display_name }}</strong>,</p>
+            <p>Welcome aboard! Your account has been created and you're ready to start buying and selling social media
+                accounts — safely and securely.</p>
+            <p>Every transaction on EscrowMarket is protected by our escrow system. Funds are only released when
+                <em>you</em> confirm you're satisfied.</p>
+            <a href="{{ frontend_url }}/market" class="cta">Browse the Marketplace →</a>
+        </div>
+        <div class="footer">
+            <p>EscrowMarket · You're receiving this because you signed up at escrowmarket.com</p>
+        </div>
+    </div>
+</body>
+
+</html>

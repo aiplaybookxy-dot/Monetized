@@ -1,0 +1,20 @@
+DISPUTE OPENED — ACTION REQUIRED
+=================================
+
+A buyer has raised a dispute on EscrowMarket. Funds are frozen.
+
+Order ID : {{ order.id }}
+Listing  : {{ listing.title }}
+Platform : {{ listing.get_platform_display }}
+Amount   : ₦{{ order.amount }}
+Buyer    : @{{ buyer.username }} ({{ buyer.email }})
+Seller   : @{{ seller.username }} ({{ seller.email }})
+Disputed : {{ order.disputed_at }}
+
+Reason:
+{{ order.admin_notes }}
+
+Review this dispute:
+{{ frontend_url }}/moderator/disputes
+
+— EscrowMarket Moderation

@@ -1,0 +1,239 @@
+/* src/index.css
+ *
+ * Tailwind v4 — dark mode via .dark class on <html>
+ *
+ * WHY @custom-variant dark:
+ * Tailwind v4 does NOT automatically honour the .dark class on <html>.
+ * Without this line, every dark: utility in the entire codebase is silently
+ * ignored. The toggle works (class is added to <html>) but nothing visually
+ * changes because the CSS was never generated.
+ *
+ * This single line is the fix for "dark mode toggle works but colours
+ * don't change" in Tailwind v4.
+ */
+@import "tailwindcss";
+
+/* ── Dark mode — class strategy ──────────────────────────────────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Design tokens ───────────────────────────────────────────────────────── */
+@theme {
+    --font-ubuntu: "Ubuntu", sans-serif;
+
+    /* Brand — indigo/violet */
+    --color-brand-50:  #eef2ff;
+    --color-brand-100: #e0e7ff;
+    --color-brand-200: #c7d2fe;
+    --color-brand-300: #a5b4fc;
+    --color-brand-400: #818cf8;
+    --color-brand-500: #6366f1;
+    --color-brand-600: #4f46e5;
+    --color-brand-700: #4338ca;
+    --color-brand-800: #3730a3;
+    --color-brand-900: #312e81;
+
+    /* Surfaces */
+    --color-surface-light: #f8fafc;
+    --color-surface-dark:  #0f1117;
+}
+
+/* ── Google Fonts ─────────────────────────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap");
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+    font-family: "Ubuntu", sans-serif;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    margin: 0;
+    background-color: var(--color-surface-light);
+    color: #111827;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.dark body {
+    background-color: var(--color-surface-dark);
+    color: #f9fafb;
+}
+
+/* ── Component classes ────────────────────────────────────────────────────── */
+
+/* Card */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+html.dark .card {
+    background-color: #1a1f2e;
+    border-color: #2d3748;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+}
+
+/* Input */
+.input {
+    display: block;
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.75rem;
+    border: 1.5px solid #e5e7eb;
+    background-color: #ffffff;
+    color: #111827;
+    font-size: 0.875rem;
+    font-family: "Ubuntu", sans-serif;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.input::placeholder { color: #9ca3af; }
+.input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgb(99 102 241 / 0.12);
+}
+html.dark .input {
+    background-color: #111827;
+    border-color: #374151;
+    color: #f9fafb;
+}
+html.dark .input::placeholder { color: #6b7280; }
+html.dark .input:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgb(129 140 248 / 0.15);
+}
+
+/* Buttons */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    background-color: #6366f1;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: "Ubuntu", sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgb(99 102 241 / 0.3);
+}
+.btn-primary:hover:not(:disabled) {
+    background-color: #4f46e5;
+    box-shadow: 0 4px 12px rgb(99 102 241 / 0.35);
+    transform: translateY(-1px);
+}
+.btn-primary:active:not(:disabled) { transform: translateY(0); }
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    background-color: transparent;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: "Ubuntu", sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.btn-ghost:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+html.dark .btn-ghost { color: #d1d5db; }
+html.dark .btn-ghost:hover {
+    background-color: #1f2937;
+    color: #f9fafb;
+}
+
+/* Badge */
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+/* ── Replace the @apply lines with full inline styles ── */
+.badge-pending {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background-color: #fef3c7;
+    color: #b45309;
+}
+.badge-funded {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+.badge-provision {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background-color: #ede9fe;
+    color: #6d28d9;
+}
+.badge-completed {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background-color: #d1fae5;
+    color: #065f46;
+}
+.badge-disputed {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+html.dark .badge-pending   { background-color: rgb(120 53 15 / 0.4);  color: #fcd34d; }
+html.dark .badge-funded    { background-color: rgb(30 58 138 / 0.4);  color: #93c5fd; }
+html.dark .badge-provision { background-color: rgb(76 29 149 / 0.4);  color: #c4b5fd; }
+html.dark .badge-completed { background-color: rgb(6 78 59 / 0.4);   color: #6ee7b7; }
+html.dark .badge-disputed  { background-color: rgb(127 29 29 / 0.4);  color: #fca5a5; }

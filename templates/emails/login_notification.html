@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>New Login Detected</title>
+    <style>
+        body {
+            font-family: 'Ubuntu', Arial, sans-serif;
+            background: #F8FAFC;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            max-width: 560px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #1a56f0;
+            padding: 28px 32px;
+        }
+
+        .header h1 {
+            color: #fff;
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .body {
+            padding: 32px 40px;
+        }
+
+        .body p {
+            color: #374151;
+            line-height: 1.7;
+            font-size: 15px;
+            margin: 0 0 12px;
+        }
+
+        .ip-box {
+            background: #F1F5F9;
+            border-left: 4px solid #1a56f0;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 14px;
+            color: #1F2937;
+        }
+
+        .alert {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #92400E;
+        }
+
+        .footer {
+            padding: 20px 40px;
+            border-top: 1px solid #F1F5F9;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #9CA3AF;
+            font-size: 12px;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <h1>🔐 New Login Detected</h1>
+        </div>
+        <div class="body">
+            <p>Hi <strong>{{ user.display_name }}</strong>,</p>
+            <p>A new login to your EscrowMarket account was just detected.</p>
+            <div class="ip-box">
+                <strong>IP Address:</strong> {{ ip }}<br />
+                <strong>Time:</strong> {% now "N j, Y, P" %}
+            </div>
+            <div class="alert">
+                ⚠️ If this wasn't you, please <a href="{{ frontend_url }}/settings">change your password immediately</a>
+                and contact support.
+            </div>
+            <p>If this was you, no action is needed.</p>
+        </div>
+        <div class="footer">
+            <p>EscrowMarket Security Alerts · escrowmarket.com</p>
+        </div>
+    </div>
+</body>
+
+</html>

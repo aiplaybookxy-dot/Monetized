@@ -1,0 +1,13 @@
+Hi {{ user.display_name }},
+
+A new login to your EscrowMarket account was detected.
+
+IP Address: {{ ip }}
+Time: {% now "N j, Y, P" %}
+
+If this wasn't you, change your password immediately:
+{{ frontend_url }}/settings
+
+If this was you, no action is needed.
+
+— EscrowMarket Security

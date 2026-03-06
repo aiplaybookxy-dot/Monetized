@@ -1,0 +1,17 @@
+Hi {{ user.display_name }},
+
+Your payment of ₦{{ order.amount }} has been secured in escrow.
+
+Account: {{ listing.title }}
+Platform: {{ listing.get_platform_display }}
+Order ID: {{ order.id }}
+Reference: {{ order.paystack_reference }}
+
+What happens next:
+1. The seller uploads account credentials to the secure vault.
+2. You receive and verify the credentials.
+3. You confirm the order to release funds.
+
+View your order: {{ frontend_url }}/orders/{{ order.id }}
+
+— EscrowMarket

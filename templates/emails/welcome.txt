@@ -1,0 +1,11 @@
+Hi {{ user.display_name }},
+
+Welcome to EscrowMarket!
+
+Your account has been created successfully. You can now browse listings and start trading social media accounts safely.
+
+Every transaction is protected by our escrow system — funds are only released when you confirm you're satisfied.
+
+Browse the marketplace: {{ frontend_url }}/market
+
+— The EscrowMarket Team
