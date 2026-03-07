@@ -43,11 +43,12 @@ const USER_NAV = [
 ];
 
 const MOD_NAV = [
-    { to: "/moderator",          icon: BarChart3,   label: "Overview",       exact: true },
-    { to: "/moderator/disputes", icon: ShieldAlert, label: "Disputes"                    },
-    { to: "/moderator/listings", icon: Upload,      label: "Listing Queue"               },
-    { to: "/moderator/users",    icon: Users,       label: "User Audits"                 },
-    { to: "/moderator/logs",     icon: ScrollText,  label: "System Log"                  },
+    { to: "/moderator",             icon: BarChart3,   label: "Overview",       exact: true },
+    { to: "/moderator/disputes",    icon: ShieldAlert, label: "Disputes"                    },
+    { to: "/moderator/listings",    icon: Upload,      label: "Listing Queue"               },
+    { to: "/moderator/vault-queue", icon: ShieldCheck, label: "Vault Queue"                 },
+    { to: "/moderator/users",       icon: Users,       label: "User Audits"                 },
+    { to: "/moderator/logs",        icon: ScrollText,  label: "System Log"                  },
 ];
 
 const ADMIN_NAV = [

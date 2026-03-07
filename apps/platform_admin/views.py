@@ -195,8 +195,8 @@ class AdminStatsView(APIView):
         )
         escrow_held = (
             Order.objects.filter(status__in=[
-                OrderStatus.FUNDED, OrderStatus.PROVISIONED,
-                OrderStatus.INSPECTION, OrderStatus.DISPUTED,
+                OrderStatus.FUNDED, OrderStatus.IN_PROVISION,
+                OrderStatus.DISPUTED,
             ]).aggregate(t=Sum("amount"))["t"] or Decimal("0")
         )
         pending_withdrawals = (
@@ -524,4 +524,82 @@ class PublicPlatformConfigView(APIView):
             "min_withdrawal_amount": float(cfg.min_withdrawal_amount),
             "platform_name":         cfg.platform_name,
             "maintenance_mode":      cfg.maintenance_mode,
+        })
+        
+
+class SeizeBondView(APIView):
+    """
+    POST /api/v1/admin/users/<pk>/seize-bond/
+
+    Admin nuclear option for confirmed scam sellers.
+    Calls User.seize_bond() which:
+      - Deducts seller_bond from total_earned
+      - Zeroes seller_bond
+      - Sets bond_seized_at = now
+      - Sets is_active = False (bans the account)
+
+    Logs to ActivityLog and sends in-app notification.
+    Only platform owners / admins can call this.
+    """
+    permission_classes = [IsAuthenticated]
+
+    @transaction.atomic
+    def post(self, request, pk):
+        # ── Permission check ──────────────────────────────────────────────────
+        if not getattr(request.user, "is_admin_role", False) and not request.user.is_superuser:
+            return Response({"error": "Admin access required."}, status=403)
+
+        # ── Load target ───────────────────────────────────────────────────────
+        try:
+            target = User.objects.select_for_update().get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"error": "User not found."}, status=404)
+
+        if target == request.user:
+            return Response({"error": "Cannot seize your own bond."}, status=400)
+
+        if float(target.seller_bond or 0) <= 0:
+            return Response({"error": "This user has no bond to seize."}, status=400)
+
+        if target.bond_seized_at:
+            return Response({"error": "Bond has already been seized."}, status=400)
+
+        # ── Seize the bond ────────────────────────────────────────────────────
+        amount_seized = target.seize_bond()
+
+        # ── Activity log ──────────────────────────────────────────────────────
+        ActivityLog.objects.create(
+            user=request.user,
+            action=ActionType.DISPUTE_RESOLVED,
+            description=(
+                f"Admin {request.user.username} seized ₦{amount_seized:,.2f} bond "
+                f"from @{target.username} (confirmed scam). Account banned."
+            ),
+            ip_address=getattr(request, "client_ip", request.META.get("REMOTE_ADDR", "")),
+            object_type="User",
+            object_id=str(target.pk),
+            metadata={
+                "action":       "seize_bond",
+                "amount":       str(amount_seized),
+                "target":       target.username,
+                "admin":        request.user.username,
+            },
+        )
+
+        # ── In-app notification to target (even though banned) ────────────────
+        Notification.objects.create(
+            recipient=target,
+            notification_type=NotificationType.SYSTEM,
+            title="Your account has been suspended",
+            message=(
+                f"Your seller bond of ₦{amount_seized:,.2f} has been seized "
+                f"following a confirmed scam dispute resolution. "
+                f"Your account has been suspended. Contact support to appeal."
+            ),
+        )
+
+        return Response({
+            "detail":       "Bond seized and account banned.",
+            "amount_seized": str(amount_seized),
+            "user":          target.username,
         })
