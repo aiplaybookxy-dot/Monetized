@@ -1,10 +1,14 @@
 /**
- * src/App.jsx
+ * src/App.jsx  — FINAL with all routes wired
  *
- * CHANGES vs previous version:
- *  + lazy import for ListingVaultUpload (was missing — route existed but component wasn't imported)
- *  + lazy import for ResetPassword
- *  + /reset-password/:uid/:token  public route (used by guest checkout emails)
+ * New additions vs previous version:
+ *  + WalletPage           → /wallet
+ *  + NotificationsPage    → /notifications
+ *  + MyDisputesPage       → /disputes
+ *  + DisputeRoom          → /disputes/:id
+ *  + ResetPassword        → /reset-password/:uid/:token  (PUBLIC)
+ *  + VaultVerifyQueue     → /moderator/vault-queue
+ *  + ListingVaultUpload   → /sell/listings/:id/vault     (was missing import)
  */
 import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
@@ -13,46 +17,49 @@ import AppLayout      from "./components/layout/AppLayout";
 import LoadingSpinner from "./components/ui/LoadingSpinner";
 
 // ── Public ────────────────────────────────────────────────────────────────────
-const HomePage            = lazy(() => import("./pages/Home"));
-const LoginPage           = lazy(() => import("./pages/auth/Login"));
-const RegisterPage        = lazy(() => import("./pages/auth/Register"));
-const ResetPassword       = lazy(() => import("./pages/auth/ResetPassword"));
-const AccountDetail       = lazy(() => import("./pages/listing/AccountDetail"));
-const StorefrontPage      = lazy(() => import("./pages/store/Storefront"));
-const PaymentVerify       = lazy(() => import("./pages/payment/Verify"));
-const NotFound            = lazy(() => import("./pages/NotFound"));
+const HomePage       = lazy(() => import("./pages/Home"));
+const LoginPage      = lazy(() => import("./pages/auth/Login"));
+const RegisterPage   = lazy(() => import("./pages/auth/Register"));
+const ResetPassword  = lazy(() => import("./pages/auth/ResetPassword"));
+const AccountDetail  = lazy(() => import("./pages/listing/AccountDetail"));
+const StorefrontPage = lazy(() => import("./pages/store/Storefront"));
+const PaymentVerify  = lazy(() => import("./pages/payment/Verify"));
+const NotFound       = lazy(() => import("./pages/NotFound"));
 
 // ── Buyer / Seller ────────────────────────────────────────────────────────────
-const DashboardPage       = lazy(() => import("./pages/dashboard/Dashboard"));
-const OrdersPage          = lazy(() => import("./pages/orders/Orders"));
-const OrderDetail         = lazy(() => import("./pages/orders/OrderDetailPage"));
-const SellPage            = lazy(() => import("./pages/sell/CreateListing"));
-const MyListings          = lazy(() => import("./pages/sell/MyListings"));
-const ListingVaultUpload  = lazy(() => import("./pages/sell/ListingVaultUpload"));
-const ProfilePage         = lazy(() => import("./pages/profile/Profile"));
-const SettingsPage        = lazy(() => import("./pages/settings/Settings"));
-const StoreSettings       = lazy(() => import("./pages/store/StoreSettings"));
+const DashboardPage      = lazy(() => import("./pages/dashboard/Dashboard"));
+const OrdersPage         = lazy(() => import("./pages/orders/Orders"));
+const OrderDetail        = lazy(() => import("./pages/orders/OrderDetailPage"));
+const SellPage           = lazy(() => import("./pages/sell/CreateListing"));
+const MyListings         = lazy(() => import("./pages/sell/MyListings"));
+const ListingVaultUpload = lazy(() => import("./pages/sell/ListingVaultUpload"));
+const ProfilePage        = lazy(() => import("./pages/profile/Profile"));
+const SettingsPage       = lazy(() => import("./pages/settings/Settings"));
+const StoreSettings      = lazy(() => import("./pages/store/StoreSettings"));
+const WalletPage         = lazy(() => import("./pages/wallet/Wallet"));
+const NotificationsPage  = lazy(() => import("./pages/notifications/NotificationsPage"));
+const MyDisputesPage     = lazy(() => import("./pages/disputes/MyDisputes"));
+const DisputeRoom        = lazy(() => import("./pages/disputes/DisputeRoom"));
 
 // ── Moderator ─────────────────────────────────────────────────────────────────
-const ModeratorDashboard  = lazy(() => import("./pages/moderator/ModeratorDashboard"));
-const DisputeManager      = lazy(() => import("./pages/moderator/DisputeManager"));
-const ListingApprovals    = lazy(() => import("./pages/moderator/ListingApprovals"));
-const UserAudit           = lazy(() => import("./pages/moderator/UserAudit"));
-const ModSystemLog        = lazy(() => import("./pages/admin/SystemLog"));
-const VaultVerifyQueue    = lazy(() => import("./pages/moderator/VaultVerifyQueue"));
+const ModeratorDashboard = lazy(() => import("./pages/moderator/ModeratorDashboard"));
+const DisputeManager     = lazy(() => import("./pages/moderator/DisputeManager"));
+const ListingApprovals   = lazy(() => import("./pages/moderator/ListingApprovals"));
+const UserAudit          = lazy(() => import("./pages/moderator/UserAudit"));
+const ModSystemLog       = lazy(() => import("./pages/admin/SystemLog"));
+const VaultVerifyQueue   = lazy(() => import("./pages/moderator/VaultVerifyQueue"));
 
 // ── Admin ─────────────────────────────────────────────────────────────────────
-const AdminDashboard      = lazy(() => import("./pages/admin/AdminDashboard"));
-const AdminRevenue        = lazy(() => import("./pages/admin/Revenue"));
-const AdminWithdrawals    = lazy(() => import("./pages/admin/Withdrawals"));
-const AdminUsers          = lazy(() => import("./pages/admin/AdminUsers"));
-const AdminModerators     = lazy(() => import("./pages/admin/Moderators"));
-const AdminLogs           = lazy(() => import("./pages/admin/SystemLog"));
-const AdminSettings       = lazy(() => import("./pages/admin/PlatformSettings"));
+const AdminDashboard   = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminRevenue     = lazy(() => import("./pages/admin/Revenue"));
+const AdminWithdrawals = lazy(() => import("./pages/admin/Withdrawals"));
+const AdminUsers       = lazy(() => import("./pages/admin/AdminUsers"));
+const AdminModerators  = lazy(() => import("./pages/admin/Moderators"));
+const AdminLogs        = lazy(() => import("./pages/admin/SystemLog"));
+const AdminSettings    = lazy(() => import("./pages/admin/PlatformSettings"));
 
 
 // ── Role helpers ──────────────────────────────────────────────────────────────
-
 export function getRoleHome(user) {
     if (!user) return "/login";
     if (user.is_superuser || user.role === "admin" || user.role === "platform_owner")
@@ -64,14 +71,10 @@ export function getRoleHome(user) {
 function isAdmin(user) {
     return user?.is_superuser || user?.role === "admin" || user?.role === "platform_owner";
 }
-
-function isModerator(user) {
-    return user?.role === "moderator";
-}
+function isModerator(user) { return user?.role === "moderator"; }
 
 
 // ── Route guards ──────────────────────────────────────────────────────────────
-
 function PrivateRoute({ children }) {
     const { isAuthenticated, isLoading } = useAuth();
     if (isLoading) return <LoadingSpinner fullscreen />;
@@ -124,26 +127,19 @@ export default function App() {
                 <Route path="/m/:slug"        element={<StorefrontPage />} />
                 <Route path="/payment/verify" element={<PaymentVerify />} />
 
-                {/* Password reset — used by guest checkout emails.
-                    Must be PUBLIC: guest user is not logged in yet. */}
+                {/* Guest checkout password set — must be PUBLIC (user not logged in yet) */}
                 <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
 
-                {/* ── Auth (redirect away if already logged in) ───────────── */}
+                {/* ── Auth (redirect away if logged in) ──────────────────── */}
                 <Route path="/login"
                     element={<PublicOnlyRoute><LoginPage /></PublicOnlyRoute>} />
                 <Route path="/register"
                     element={<PublicOnlyRoute><RegisterPage /></PublicOnlyRoute>} />
 
                 {/* ── All authenticated routes share ONE layout ────────────── */}
-                <Route
-                    path="/"
-                    element={
-                        <PrivateRoute>
-                            <AppLayout />
-                        </PrivateRoute>
-                    }
-                >
-                    {/* Regular user / buyer / seller */}
+                <Route path="/" element={<PrivateRoute><AppLayout /></PrivateRoute>}>
+
+                    {/* ── User / Buyer / Seller ────────────────────────────── */}
                     <Route path="dashboard"
                         element={<UserRoute><DashboardPage /></UserRoute>} />
                     <Route path="orders"
@@ -163,7 +159,17 @@ export default function App() {
                     <Route path="store"
                         element={<UserRoute><StoreSettings /></UserRoute>} />
 
-                    {/* Moderator portal */}
+                    {/* ── NEW: Wallet, Notifications, Disputes ─────────────── */}
+                    <Route path="wallet"
+                        element={<UserRoute><WalletPage /></UserRoute>} />
+                    <Route path="notifications"
+                        element={<UserRoute><NotificationsPage /></UserRoute>} />
+                    <Route path="disputes"
+                        element={<UserRoute><MyDisputesPage /></UserRoute>} />
+                    <Route path="disputes/:id"
+                        element={<UserRoute><DisputeRoom /></UserRoute>} />
+
+                    {/* ── Moderator portal ─────────────────────────────────── */}
                     <Route path="moderator"
                         element={<ModRoute><ModeratorDashboard /></ModRoute>} />
                     <Route path="moderator/disputes"
@@ -177,7 +183,7 @@ export default function App() {
                     <Route path="moderator/logs"
                         element={<ModRoute><ModSystemLog /></ModRoute>} />
 
-                    {/* Admin portal */}
+                    {/* ── Admin portal ─────────────────────────────────────── */}
                     <Route path="admin"
                         element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                     <Route path="admin/revenue"
@@ -194,7 +200,7 @@ export default function App() {
                         element={<AdminRoute><AdminSettings /></AdminRoute>} />
                 </Route>
 
-                {/* ── 404 ─────────────────────────────────────────────────── */}
+                {/* ── 404 ──────────────────────────────────────────────────── */}
                 <Route path="*" element={<NotFound />} />
 
             </Routes>

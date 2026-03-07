@@ -46,19 +46,22 @@ class UserPublicSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id", "email", "username", "full_name", "avatar", "bio",
-            "role",                    # ← ADD THIS — frontend routing depends on it
-            "is_active",               # ← ADD THIS
+            "role",
+            "is_active",
             "seller_rating", 
             "completed_sales", 
             "completed_purchases",
             "total_earned", 
             "total_spent", 
+            "seller_bond",        # ← ADD — needed by Wallet.jsx balance card
+            "bond_seized_at",     # ← ADD — needed by AdminUsers.jsx seized badge
             "is_email_verified", 
             "date_joined",
         ]
         read_only_fields = [
             "id", "role", "seller_rating", "completed_sales", "completed_purchases",
-            "total_earned", "total_spent", "is_email_verified", "date_joined",
+            "total_earned", "total_spent", "seller_bond", "bond_seized_at",
+            "is_email_verified", "date_joined",
         ]
 
 

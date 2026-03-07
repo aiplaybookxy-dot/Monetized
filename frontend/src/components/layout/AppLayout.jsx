@@ -33,6 +33,7 @@ const USER_NAV = [
     { to: "/dashboard",      icon: LayoutDashboard, label: "Dashboard",     exact: true },
     { to: "/orders",         icon: Package,         label: "My Orders"                  },
     { to: "/disputes",       icon: Flag,            label: "My Disputes"                },
+    { to: "/wallet",         icon: Wallet,          label: "Wallet"                     },
     { to: "/notifications",  icon: Bell,            label: "Notifications"              },
     { to: "/sell/listings",  icon: List,            label: "My Listings"                },
     { to: "/sell",           icon: PlusCircle,      label: "New Listing",   exact: true },

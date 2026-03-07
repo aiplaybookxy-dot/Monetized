@@ -14,7 +14,8 @@ from .views import (
     WithdrawalReviewView,
     RevenueView,
     PublicPlatformConfigView,
-    SeizeBondView
+    SeizeBondView,
+    SellerWithdrawalsView,  
 )
 
 urlpatterns = [
@@ -43,4 +44,6 @@ urlpatterns = [
     path("admin/withdrawals/<uuid:pk>/reject/",     WithdrawalReviewView.as_view(), name="admin-withdrawal-reject"),
     
     path("admin/users/<uuid:pk>/seize-bond/", SeizeBondView.as_view(), name="admin-seize-bond"),
+    
+    path("withdrawals/mine/", SellerWithdrawalsView.as_view(), name="seller-withdrawals"),
 ]

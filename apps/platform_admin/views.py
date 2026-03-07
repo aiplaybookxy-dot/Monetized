@@ -603,3 +603,23 @@ class SeizeBondView(APIView):
             "amount_seized": str(amount_seized),
             "user":          target.username,
         })
+
+
+class SellerWithdrawalsView(generics.ListAPIView):
+    
+    # GET /api/v1/withdrawals/mine/
+    
+    # Sellers can see their own withdrawal history.
+    # The existing WithdrawalListView (GET /admin/withdrawals/) is restricted
+    # to IsPlatformOwner only — sellers had no way to see their own requests.
+    
+    # This endpoint fixes that. Returns only requests for the current user,
+    # newest first.
+    
+    serializer_class   = WithdrawalRequestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return WithdrawalRequest.objects.filter(
+            seller=self.request.user
+        ).order_by("-created_at")
